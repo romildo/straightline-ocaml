@@ -1,0 +1,8 @@
+true: debug
+
+<src>: include
+
+<**/*.{cmo,cmx}>: package(camomile)
+
+<**/*.{byte,native}>: package(bigarray), package(camomile)
+
