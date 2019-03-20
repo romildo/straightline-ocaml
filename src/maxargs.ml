@@ -1,3 +1,3 @@
 open Absyn
 
-let maxargsexp statement = 0
+let maxargs statement = 0

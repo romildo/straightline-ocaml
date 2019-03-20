@@ -101,7 +101,7 @@ $ ocamlbuild clean
 ## To compile the project
 
 ```
-$ ocamlbuild build
+$ ocamlbuild src/driver.byte -package camomile -package bigarray
 
 ```
 
