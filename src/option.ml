@@ -36,7 +36,7 @@ and options =
   ; "-ast",     Arg.Set ast,     "\t\tDisplay abstract syntax tree"
   ; "-dot",     Arg.Set dot,     "\t\tGenerate abstract syntax tree as a dot program"
   ; "-run",     Arg.Set run,     "\t\tRun the input program"
-  ; "-maxargs", Arg.Set maxargs, "\Calculate maximum number of arguments in a print statement"
+  ; "-maxargs", Arg.Set maxargs, "\tCalculate maximum number of arguments in a print statement"
   ; "-help",    Arg.Unit usage,  "\tDisplay this list of options"
   ; "--help",   Arg.Unit usage,  "\tDisplay this list of options"
   ]
