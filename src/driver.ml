@@ -28,7 +28,7 @@ let interpret lexbuf =
       output_string out (Tree.dot_of_tree "AST" (Tree.map Absyntree.node_dot tree))
     end;
   if Option.is_maxargs () then
-    Printf.printf "Maximum number of arguments in a printf: %d\n" (Maxargs.maxargs ast);
+    Printf.printf "Maximum number of arguments in a print: %d\n" (Maxargs.maxargs ast);
   if Option.will_run () then
     ignore (Interpreter.interpret ast)
 
