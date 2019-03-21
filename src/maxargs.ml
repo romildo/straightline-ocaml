@@ -1,3 +1,6 @@
 open Absyn
 
-let maxargs statement = 0
+let maxargs statement =
+  match statement with
+  | PrintStm args -> List.length args
+
