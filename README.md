@@ -95,13 +95,13 @@ git push origin <activity>
 ## To remove the generated files
 
 ```
-$ ocamlbuild clean
+$ ocamlbuild -clean
 ```
 
 ## To compile the project
 
 ```
-$ ocamlbuild src/driver.byte -package camomile -package bigarray
+$ ocamlbuild driver.native -use-ocamlfind
 
 ```
 
