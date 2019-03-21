@@ -1,0 +1,10 @@
+
+(executable
+  (name driver)
+  (libraries camomile)
+  (flags (:standard -unsafe-string -warn-error -A))
+)
+
+(ocamllex lexer)
+
+(ocamlyacc parser)
