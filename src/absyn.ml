@@ -8,7 +8,7 @@ type stm = CompoundStm of stm * stm
          | AssignStm of id * exp
          | PrintStm of exp list
 
- and exp = IdExp of string
+ and exp = IdExp of id
          | NumExp of float
          | OpExp of exp * binop * exp
          | EseqExp of stm * exp
