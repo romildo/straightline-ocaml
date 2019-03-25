@@ -90,7 +90,16 @@ git push origin <activity>
 ```
 - Make a pull request (PR) from your forked project at github.
 
-# Compiling with ocaml
+# Compiling with OCaml
+
+## Needed development tools
+
+In order to prepare your application for execution the following packages may be needed:
+
+- [OCaml compiler](http://www.ocaml.org), 
+- [Camomile](https://github.com/yoriyuki/Camomile), a Unicode library for OCaml
+- [OCamlbuild](https://github.com/ocaml/ocamlbuild/), a generic build tool that has built-in rules for building OCaml library and programs, or
+- [Dune](https://dune.build), a composable build system for OCaml
 
 ## To remove the generated files
 
