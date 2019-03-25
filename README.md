@@ -103,15 +103,31 @@ In order to prepare your application for execution the following packages may be
 
 ## To remove the generated files
 
+With `ocamlbuild`:
+
 ```
 $ ocamlbuild -clean
 ```
 
+or with `dune`
+
+```
+$ dune clean
+```
+
 ## To compile the project
+
+With `ocamlbuild`:
 
 ```
 $ ocamlbuild driver.native -use-ocamlfind
 
+```
+
+or with `dune`
+
+```
+$ dune build src/driver.exe
 ```
 
 
