@@ -16,5 +16,6 @@ pkgs.stdenv.mkDerivation {
     ocamlPackages.menhir
     pkgs.dune
     pkgs.emacs
+    pkgs.vscode
   ];
 }
