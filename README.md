@@ -97,8 +97,9 @@ git push origin <activity>
 In order to prepare your application for execution the following packages may be needed:
 
 - [OCaml compiler](http://www.ocaml.org), 
-- [Camomile](https://github.com/yoriyuki/Camomile), a Unicode library for OCaml
-- [OCamlbuild](https://github.com/ocaml/ocamlbuild/), a generic build tool that has built-in rules for building OCaml library and programs, or
+- findlib (`ocaml-findlib`),
+- [Camomile](https://github.com/yoriyuki/Camomile), a Unicode library for OCaml (`libcamomile-ocaml-dev`)
+- [OCamlbuild](https://github.com/ocaml/ocamlbuild/), a generic build tool that has built-in rules for building OCaml library and programs (`ocamlbuild-nox`), or
 - [Dune](https://dune.build), a composable build system for OCaml
 
 ## To remove the generated files
