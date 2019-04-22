@@ -6,6 +6,7 @@
 let alpha = ['a'-'z' 'A'-'Z']
 let digit = ['0'-'9']
 let id = alpha+ (alpha|digit|'_')*
+let num = digit+ ("." digit*)? | (digit* ".")? digit+
 
 
 (* in the actions, lexbuf is bound to the current lexer buffer, the
@@ -14,9 +15,9 @@ let id = alpha+ (alpha|digit|'_')*
 rule token = parse
   | [' ' '\t']    { token lexbuf }
   | '\n'	  { Lexing.new_line lexbuf; token lexbuf }
-  | "//"          { token lexbuf }
+  | "//" [^'\n']* { token lexbuf }
   | "print"	  { Parser.PRINT }
-  | digit+ ("." digit*)? | (digit* ".")? digit+ as lxm { Parser.NUM (float_of_string lxm) }
+  | num as lxm    { Parser.NUM (float_of_string lxm) }
   | id as lxm	  { Parser.ID lxm }
   | ":="	  { Parser.ASSIGN }
   | '+'		  { Parser.PLUS }
