@@ -29,7 +29,7 @@ All remote repositories can be listed with the following command:
 $ git remote -v
 ```
 
-Similar steps will also be followed when starting other github based projects on the course.
+Similar steps can also be followed when starting other github based projects on the course.
 
 The above commands were presented to you using the command line. There are other ways to accomplish them, though. For instance they may be integrated in development environments like [IntelliJ IDEA](https://www.jetbrains.com/idea), [Eclipse](https://www.eclipse.org), [Atom](https://atom.io/) and [Visual Studio SCode](https://code.visualstudio.com/).
 
@@ -99,18 +99,11 @@ In order to prepare your application for execution the following packages may be
 - [OCaml compiler](http://www.ocaml.org), 
 - findlib (`ocaml-findlib`),
 - [Camomile](https://github.com/yoriyuki/Camomile), a Unicode library for OCaml (`libcamomile-ocaml-dev`)
-- [OCamlbuild](https://github.com/ocaml/ocamlbuild/), a generic build tool that has built-in rules for building OCaml library and programs (`ocamlbuild-nox`), or
 - [Dune](https://dune.build), a composable build system for OCaml
 
 ## To remove the generated files
 
-With `ocamlbuild`:
-
-```
-$ ocamlbuild -clean
-```
-
-or with `dune`
+With `dune`:
 
 ```
 $ dune clean
@@ -118,17 +111,18 @@ $ dune clean
 
 ## To compile the project
 
-With `ocamlbuild`:
-
-```
-$ ocamlbuild driver.native -use-ocamlfind
-
-```
-
-or with `dune`
+With `dune`:
 
 ```
 $ dune build src/driver.exe
+```
+
+## To run the executable
+
+With `dune`:
+
+```
+$ dune exec src/driver.exe
 ```
 
 
