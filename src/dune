@@ -2,9 +2,16 @@
 (executable
   (name driver)
   (libraries camomile)
-  (flags (:standard -unsafe-string -warn-error -A))
-)
+  (flags (:standard -unsafe-string -warn-error -A)))
 
 (ocamllex lexer)
 
-(ocamlyacc parser)
+(menhir
+  (modules parser)
+  (flags (
+         --explain        ; explain conflicts
+         --dump           ; describe automaton
+         --graph          ; describe the grammar’s dependency graph
+         --log-grammar 2
+         ))
+  (infer true))
