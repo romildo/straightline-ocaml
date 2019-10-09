@@ -1,9 +1,0 @@
-true: debug
-
-true: unsafe_string
-
-<src>: include
-
-<**/*.{cmo,cmx}>: package(camomile)
-
-<**/*.{byte,native}>: package(bigarray), package(camomile)
