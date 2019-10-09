@@ -3,10 +3,15 @@
 module U = CamomileLibraryDefault.Camomile.UTF8
 module UC = CamomileLibraryDefault.Camomile.UChar
 
+let value option default =
+  match option with
+  | None -> default
+  | Some x -> x
+
 let str_length = U.length
 
 let str_split c s =
-  let uc = UC.of_char '\n' in
+  let uc = UC.of_char c in
   let rec go i =
     if U.out_of_range s i then
       []
@@ -24,7 +29,7 @@ let str_split c s =
   go (U.first s)
 
 type box = string list
-
+[@@deriving show]
 
 let replicate n x =
   let rec go n xs =
@@ -34,15 +39,11 @@ let replicate n x =
   in
   go n []
 
-
 let str_make n s = String.concat "" (replicate n s)
 
-
-let rec maximum = function
-  | [x] -> x
-  | (x::xs) -> max x (maximum xs)
-
-
+let maximum = function
+  | [] -> None
+  | hd::tl -> Some (List.fold_left max hd tl)
 
 let char x = [String.make 1 x]
 
@@ -56,7 +57,7 @@ let line x =
   if x = "" then [x]
   else
     let xs = str_split '\n' x in
-    let w = maximum (List.map U.length xs) in
+    let w = value (maximum (List.map U.length xs)) 0 in
     List.map
       (fun x ->
         let n = U.length x in
@@ -80,7 +81,6 @@ let width = function
   | [] -> 0
 
 let height xs = List.length xs
-
 
 
 let rec widen box new_width =
@@ -125,34 +125,74 @@ let frame box =
   and vert = uniform "│" 1 (height box) in
   above
     (beside
-       (line "┌")
-       (beside horiz (line "┐")))
+       (line "╭")
+       (beside horiz (line "╮")))
     (above
        (beside
           vert
           (beside box vert))
        (beside
-          (line "└")
-          (beside horiz (line "┘"))))
+          (line "╰")
+          (beside horiz (line "╯"))))
 
+let connect_at_top box =
+  let head :: tail = box in
+  let n = U.length head in
+  let n' = String.length head in
+  let middle1 = U.nth head (n / 2) in
+  let middle2 = U.next head middle1 in
+  let head' = String.sub head 0 middle1 ^ "┴" ^ String.sub head middle2 (n' - middle2) in
+  head' :: tail
 
-let connect box = function
-  | []  -> box
-  | [b] -> above box (above (line "|") b)
-  | b1::bs  ->
-    let rec go = function
-      | [b] -> let w = width b in
-               str_make (w/2) "─" ^ "┐" ^ String.make (w-w/2+1) ' '
-      | b::bs -> let w = width b in
-                 str_make (w/2) "─" ^ "┬" ^ str_make (w-w/2+1) "─" ^ go bs
-    in
-    let w = width b1 in
-    let buf = String.make (w/2-1) ' ' ^ "┌" ^ str_make (w-w/2) "─" ^ go bs in
-    let q = (U.length buf - 1)/2 in
-    let q1 = U.nth buf q in
-    let q2 = U.next buf q1 in
-    let buf = String.sub buf 0 q1 ^ "┴" ^ String.sub buf q2 (String.length buf - q2) in
-    (* buf.[q] <- if buf.[q] = '-' then '+' else '+'; *)
-    let box2 = List.fold_left (fun b1 b2 -> beside2 b1 (beside2 (char ' ') b2)) b1 bs in
-    above box (above (line buf) box2)
+let connect_at_bottom box =
+  let last :: init = List.rev box in
+  let n = U.length last in
+  let n' = String.length last in
+  let middle1 = U.nth last (n / 2) in
+  let middle2 = U.next last middle1 in
+  let last' = String.sub last 0 middle1 ^ "┬" ^ String.sub last middle2 (n' - middle2) in
+  List.rev (last' :: init)
 
+let make_horizontal_segment left center right width =
+  str_make (width/2) left
+  ^ center
+  ^ str_make (width - width/2 - 1) right
+
+let split_list_3 list =
+  match list with
+  | [] -> raise (invalid_arg "split_list_3")
+  | head :: tail ->
+     match List.rev tail with
+     | [] -> raise (invalid_arg "split_list_3")
+     | last :: others ->
+        (head, List.rev others, last)
+
+let (@:) init last =
+  List.append init [last]
+
+let fold_left' op list =
+  match list with
+  | [] -> raise (invalid_arg "fold_left'")
+  | head :: tail -> List.fold_left op head tail
+
+let intersperse = Util.intersperse
+
+let connect_aux root child =
+  above (connect_at_bottom (widen root (width child)))
+        (connect_at_top (widen child (width root)))
+
+let connect root children =
+  match List.map connect_at_top children with
+  | []  -> root
+  | [child] -> connect_aux root child
+  | children ->
+     let (wfirst, wothers, wlast) = split_list_3 (List.map width children) in
+     let hrule =
+       String.concat
+         "─"
+         (make_horizontal_segment " " "╭" "─" wfirst
+           :: List.map (make_horizontal_segment "─" "┬" "─") wothers
+           @: make_horizontal_segment "─" "╮" " " wlast)
+     in
+    let bchildren = above (line hrule) (fold_left' beside2 (intersperse (char ' ') children)) in
+    connect_aux root bchildren
