@@ -24,3 +24,6 @@ setup.log
 
 # dune
 dune-project
+
+# emacs backups files
+*~
