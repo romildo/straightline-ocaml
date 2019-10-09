@@ -15,7 +15,8 @@ type token =
   | TokDiv
   | TokEOF
 
-let string_of_token = function
+let string_of_token tok =
+  match tok with
   | TokSemicolumn -> "TokSemicolumn"
   | TokId x -> "TokId[" ^ x ^ "]"
   | TokAssign -> "TokAssign"
