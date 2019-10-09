@@ -18,5 +18,6 @@ pkgs.stdenv.mkDerivation {
     pkgs.dune
     pkgs.emacs
     pkgs.vscode
+    pkgs.rlwrap
   ];
 }
