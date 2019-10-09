@@ -4,26 +4,7 @@
 
 module A = Absyn
 
-(*
-let pos n x = mkloc { loc_start = Parsing.rhs_start_pos n;
-                      loc_end = Parsing.rhs_end_pos n;
-                    }
-                    x
-
-let loc x = mkloc { loc_start = Parsing.symbol_start_pos ();
-                    loc_end = Parsing.symbol_end_pos ();
-                  }
-                  x
- *)
-
 let loc x = x
-
-let parse_error msg =
-  match ! Location.lexbuf_ref with
-  | Some lexbuf ->
-      Error.error (Location.curr_loc lexbuf) (Error.Syntax (Lexing.lexeme lexbuf))
-  | None ->
-      Error.internal "lexbuf_ref is unset"
 
 %}
 
@@ -37,46 +18,35 @@ let parse_error msg =
 %token EOF
 
 %right SEMI
-%nonassoc ASSIGN
 %left PLUS MINUS
 %left TIMES DIV
 
-%start prog
-%type <Absyn.stm> prog
+%start <Absyn.stm> prog
 
 %%
 
 prog:
-  stm                          { $1 }
-;
+| s=stm EOF                       { s }
 
 stm:
-  stm SEMI stm                 { loc (A.CompoundStm ($1, $3)) }
-| ID ASSIGN exp                { loc (A.AssignStm ($1, $3)) }
-| PRINT LPAREN args RPAREN     { loc (A.PrintStm $3) }
-;
+| s1=stm SEMI s2=stm              { loc (A.CompoundStm (s1, s2)) }
+| x=ID ASSIGN e=exp               { loc (A.AssignStm (x, e)) }
+| PRINT LPAREN a=args RPAREN      { loc (A.PrintStm a) }
 
 exp:
-  NUM                          { loc (A.NumExp $1) }
-| ID                           { loc (A.IdExp $1) }
-| exp PLUS exp                 { loc (A.OpExp ($1, A.Plus, $3)) }
-| exp MINUS exp                { loc (A.OpExp ($1, A.Minus, $3)) }
-| exp TIMES exp                { loc (A.OpExp ($1, A.Times, $3)) }
-| exp DIV exp                  { loc (A.OpExp ($1, A.Div, $3)) }
-| LPAREN stm COMMA exp RPAREN  { loc (A.EseqExp ($2, $4)) }
-;
+| x=NUM                           { loc (A.NumExp x) }
+| v=ID                            { loc (A.IdExp v) }
+| e1=exp PLUS e2=exp              { loc (A.OpExp (e1, A.Plus, e2)) }
+| e1=exp MINUS e2=exp             { loc (A.OpExp (e1, A.Minus, e2)) }
+| e1=exp TIMES e2=exp             { loc (A.OpExp (e1, A.Times, e2)) }
+| e1=exp DIV e2=exp               { loc (A.OpExp (e1, A.Div, e2)) }
+| LPAREN s=stm COMMA e=exp RPAREN { loc (A.EseqExp (s, e)) }
 
 args:
-  /* empty */                  { [] }
-| exp                          { $1 :: [] }
-| exp COMMA args_rest          { $1 :: $3 }
-| error COMMA args_rest        { $3 }
-;
+| /* empty */                     { [] }
+| e=exp                           { e :: [] }
+| e=exp COMMA es=args_rest        { e :: es }
 
 args_rest:
-  exp                          { $1 :: [] }
-| exp COMMA args_rest          { $1 :: $3 }
-| error COMMA args_rest        { $3 }
-;
-
-%%
+| e=exp                           { e :: [] }
+| e=exp COMMA es=args_rest        { e :: es }
