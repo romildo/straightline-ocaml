@@ -1,14 +1,18 @@
+open Absyn
+
 (*
-  altura := 1.73
+  altura := 173
  *)
 
-let prog1 = AssignStm ("altura", NumExp 1.73)
+let prog1 = AssignStm ("altura", NumExp 173)
+
 
 (*
   print(43, 7, 0)
  *)
 
 let prog2 = PrintStm [NumExp 43; NumExp 7; NumExp 0]
+
 
 (*
   x := 2 + 3;
@@ -18,6 +22,7 @@ let prog2 = PrintStm [NumExp 43; NumExp 7; NumExp 0]
 let prog3 =
   CompoundStm (AssignStm ("x", OpExp (NumExp 2, Plus, NumExp 3)),
                PrintStm [IdExp "x"])
+
 
 (*
   x := 2 + 3 * 4;
@@ -33,6 +38,7 @@ let prog4 =
                                         Times,
                                         NumExp 4))),
                PrintStm [IdExp "x"])
+
 
 (*
   a := 5 + 3;
